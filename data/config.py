@@ -1,5 +1,3 @@
-# - *- coding: utf- 8 - *-
-
 from environs import Env
 
 # Теперь используем вместо библиотеки python-dotenv библиотеку environs

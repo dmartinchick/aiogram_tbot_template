@@ -81,6 +81,10 @@ VALUES
 (23,'Подведение итогов, закрытие туристического слета','Прочее',NULL,'Парковка Базы отдыха *Днепровские зори*',NULL,NULL),
 (24,'Отъезд','Прочее',NULL,NULL,NULL,NULL);
 
+UPDATE `event`
+SET `name`='Зарядка, подведение итогов первого дня'
+WHERE `id`=13;
+
 
 INSERT INTO `team`
 (`name`,`holding`)
@@ -101,7 +105,7 @@ VALUES
 ('Могилевлифтмаш',0);
 
 INSERT INTO `schedule`
-(`name_id`,`time_start`,`time_end`)
+(`event_name_id`,`time_start`,`time_end`)
 VALUES
 ((SELECT `id` FROM `event` WHERE `name`='Техника пешеходного туризма'), '2021-07-18 13:00', '2021-07-18 15:30' ),
 ((SELECT `id` FROM `event` WHERE `name`='Заезд команд, разбивка лагеря'), '2021-07-18 09:00', '2021-07-18 15:30'),
@@ -126,3 +130,4 @@ VALUES
 ((SELECT `id` FROM `event` WHERE `name`='Велотуризм'), '2021-07-20 09:15', '2021-07-20 11:00'),
 ((SELECT `id` FROM `event` WHERE `name`='Перетягивание каната'), '2021-07-20 11:00', '2021-07-20 12:00'),
 ((SELECT `id` FROM `event` WHERE `name`='Подведение итогов, закрытие туристического слета'), '2021-07-20 13:00', '2021-07-20 14:30');
+

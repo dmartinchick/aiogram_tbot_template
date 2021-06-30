@@ -15,3 +15,6 @@ PORT = env.int("PORT")
 USER = env.str("USER")
 PASSWORD = env.str("PASSWORD")
 DB = env.str("DB")
+
+# Данные кореекции временной зоны
+DELTA = env.int("DELTA")

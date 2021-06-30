@@ -10,7 +10,7 @@ class SQLighter:
             self.myconn=connect(
                 host = config.HOST,
                 user = config.USER,
-                pasword = config.PASSWORD,
+                password = config.PASSWORD,
                 database = config.DB,
             )
             self.cur = self.myconn.cursor()
@@ -19,13 +19,32 @@ class SQLighter:
             print(e)
 
 
-    # Методы извлечения данных
-    def what_now_db(self):
+    def find_date_start(self):
         self.myconn.close()
         self.__init__()
-        self.tdate = datetime.today()
-        self.cur.execute("SELECT name, time_start, time_end, address, contains "
-                        "FROM schedule INNER JOIN event ON schedule.name_id = event.id "
-                        "WHERE time_start <= '%s' AND time_end >= '%s'" % (self.tdate, self.tdate))
+        self.cur.execute("SELECT MIN(time_start) FROM `schedule`;")
+        self.result = self.cur.fetchone()
+        return self.result[0]
+
+    
+    def find_date_end(self):
+        self.myconn.close()
+        self.__init__()
+        self.cur.execute("SELECT MAX(time_end) FROM schedule;")
+        self.result = self.cur.fetchone()
+        return self.result[0]
+
+
+    # Методы извлечения данных
+    # TODO: РАзобраться с пробрассыванием значения tdate
+    def what_now_db(self, tdate):
+        self.myconn.close()
+        self.__init__()
+        self.cur.execute("SELECT name, time_start, time_end "
+                        "FROM schedule INNER JOIN event ON schedule.event_name_id = event.id "
+                        "WHERE time_start <= '%s' AND time_end >= '%s'" % (tdate, tdate))
         self.result = self.cur.fetchall()
         return self.result
+
+
+SQL = SQLighter()

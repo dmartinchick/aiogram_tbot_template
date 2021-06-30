@@ -19,7 +19,7 @@ class SQLighter:
             print(e)
 
 
-    def find_date_start(self):
+    def get_date_start(self):
         self.myconn.close()
         self.__init__()
         self.cur.execute("SELECT MIN(time_start) FROM `schedule`;")
@@ -27,7 +27,7 @@ class SQLighter:
         return self.result[0]
 
     
-    def find_date_end(self):
+    def get_date_end(self):
         self.myconn.close()
         self.__init__()
         self.cur.execute("SELECT MAX(time_end) FROM schedule;")
@@ -36,13 +36,33 @@ class SQLighter:
 
 
     # Методы извлечения данных
-    # TODO: РАзобраться с пробрассыванием значения tdate
     def what_now_db(self, tdate):
+        """Возвращает пользователю список кортежей с мероприятиями
+
+        Args:
+            tdate (datetime): текущее время и дата
+
+        Returns:
+            list: список кортежей с мероприятиями
+        """
         self.myconn.close()
         self.__init__()
         self.cur.execute("SELECT name, time_start, time_end "
                         "FROM schedule INNER JOIN event ON schedule.event_name_id = event.id "
                         "WHERE time_start <= '%s' AND time_end >= '%s'" % (tdate, tdate))
+        self.result = self.cur.fetchall()
+        return self.result
+
+
+    def what_next_db(self, tdate):
+        self.myconn.close()
+        self.__init__()
+        self.cur.execute("SELECT `name`, `time_start` "
+                        "FROM `schedule` INNER JOIN `event` " 
+                        "ON `schedule`.`event_name_id` = `event`.`id` "
+                        "WHERE `time_start` > '%s' " 
+                        "ORDER BY `time_start` "
+                        "LIMIT 2;"%(tdate))
         self.result = self.cur.fetchall()
         return self.result
 

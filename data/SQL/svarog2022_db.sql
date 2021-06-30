@@ -131,3 +131,11 @@ VALUES
 ((SELECT `id` FROM `event` WHERE `name`='Перетягивание каната'), '2021-07-20 11:00', '2021-07-20 12:00'),
 ((SELECT `id` FROM `event` WHERE `name`='Подведение итогов, закрытие туристического слета'), '2021-07-20 13:00', '2021-07-20 14:30');
 
+
+SELECT `name`, `time_start`
+FROM `schedule` INNER JOIN `event` ON `schedule`.`event_name_id` = `event`.`id`
+WHERE `time_start` > '2021-07-18 19:29:00' 
+ORDER BY `time_start`
+LIMIT 2;
+
+SELECT time_start FROM schedule ORDER BY time_start LIMIT 1;

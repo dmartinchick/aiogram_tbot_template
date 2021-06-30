@@ -3,7 +3,7 @@ from aiogram.types.callback_query import CallbackQuery
 from aiogram.types.message import Message
 from aiogram.dispatcher.filters import Command
 
-from datetime import datetime, timedelta, timezone, tzinfo
+from datetime import datetime, timedelta
 
 from utils.db_api.sqlighter import SQL
 
@@ -22,16 +22,16 @@ async def show_main_menu(message: types.Message):
 async def show_what_now(call: types.CallbackQuery):
     """Возвращает пользователю текущее событие
     """
-    #TODO: реализовать функцию show_what_now
 
     await call.answer(cache_time=360)
     callback_data = call.data
     logging.info(f"{callback_data=}")
     # текущее время и дата
-    #tdate = (datetime.now() + timedelta(hours=config.DELTA))
-    tdate = datetime(2021, 7, 18, 19, 40)
-    dt_start = SQL.find_date_start()
-    dt_end = SQL.find_date_end()
+    # TODO: заменить tdate
+    # tdate = datetime.now() + timedelta(hours=config.DELTA)
+    tdate = datetime(2021, 7, 18, 19, 29)
+    dt_start = SQL.get_date_start()
+    dt_end = SQL.get_date_end()
 
     # Проверка начался ли фестиваль
     if tdate < dt_start:
@@ -43,7 +43,8 @@ async def show_what_now(call: types.CallbackQuery):
         
         # обращение к базе данных и получение данных
         rq = SQL.what_now_db(tdate)
-        # запуск циклаобработки текущих событий
+       
+        # запуск цикла обработки текущих событий
         for event in rq:
             # парсинг данных
             event_name = event[0]
@@ -56,9 +57,6 @@ async def show_what_now(call: types.CallbackQuery):
             await call.message.answer(event_name)
 
 
-
-
-
 @dp.callback_query_handler(text_contains="main:what_next")
 async def show_what_next(call: types.CallbackQuery):
     """Возвращает пользователю ближайшее событие
@@ -69,8 +67,25 @@ async def show_what_next(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Ты только глянь, что скоро начнеться")
-    pass
+    # получение текущей даты и времени, а так же даты и времени окончания фестиваля
+    tdate = datetime.now()+timedelta(hours=config.DELTA)
+    dt_end = SQL.get_date_end()
+    # проверка не закончился ли фестиваль
+    if tdate >= dt_end:
+        await call.message.answer("☹ К сожелению, фестиваль уже прошел.\nУвидимся в следующем году! 😁")
+    else:
+        # обращение к БД и получение ближайших мероприятий
+        rq = SQL.what_next_db(tdate)
+
+        # запуск цикла обработки текущих событий
+        for event in rq:
+            # парсинг данных
+            event_name = event[0]
+            time_start = event[1].strftime('%d.%m %H:%M')
+            # time_end = event[2].strftime('%d.%m %H:%M')
+            # address = event[3]
+            # contains = event[4]
+            await call.message.answer(f"{event_name}\nНачало: {time_start}")
 
 
 @dp.callback_query_handler(text_contains="main:full_schedule")

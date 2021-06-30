@@ -68,7 +68,9 @@ async def show_what_next(call: types.CallbackQuery):
     logging.info(f"{callback_data=}")
     
     # получение текущей даты и времени, а так же даты и времени окончания фестиваля
-    tdate = datetime.now()+timedelta(hours=config.DELTA)
+    # TODO: заменить tdate
+    # tdate = datetime.now() + timedelta(hours=config.DELTA)
+    tdate = datetime(2021, 7, 18, 19, 29)
     dt_end = SQL.get_date_end()
     # проверка не закончился ли фестиваль
     if tdate >= dt_end:

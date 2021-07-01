@@ -10,6 +10,7 @@ from utils.db_api.sqlighter import SQL
 #Загрузка клавиатур
 from keyboards.inline.inline_main_menu import inkb_main_menu
 from keyboards.inline.result_menu import inkb_result_menu
+from keyboards.inline.contests_menu import inkb_contests_menu
 
 from loader import dp
 import logging
@@ -20,7 +21,7 @@ async def show_main_menu(message: types.Message):
     await message.answer(text="Главное меню", reply_markup=inkb_main_menu)
 
 
-@dp.callback_query_handler(text_contains='result:back')
+@dp.callback_query_handler(text_contains='back')
 async def back_main_menu(call: types.CallbackQuery):
     """Возвращает пользователя в главное меню
     """
@@ -139,7 +140,7 @@ async def show_contests_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Вот конкурсы")
+    await call.message.answer("Выбирите интересующие вас конкурсы", reply_markup=inkb_contests_menu)
     pass
 
 

@@ -4,11 +4,13 @@ from aiogram.types.message import Message
 from aiogram.dispatcher.filters import Command
 
 from datetime import datetime, timedelta
+from keyboards.inline import result_menu
 
 from utils.db_api.sqlighter import SQL
 
 #Загрузка клавиатур
 from keyboards.inline.inline_main_menu import inkb_main_menu
+from keyboards.inline.result_menu import inkb_result_menu
 
 from loader import dp
 import logging
@@ -29,7 +31,7 @@ async def show_what_now(call: types.CallbackQuery):
     # текущее время и дата
     # TODO: заменить tdate
     # tdate = datetime.now() + timedelta(hours=config.DELTA)
-    tdate = datetime(2021, 7, 18, 19, 29)
+    tdate = datetime(2021, 7, 18, 19, 29) + timedelta(hours=config.DELTA)
     dt_start = SQL.get_date_start()
     dt_end = SQL.get_date_end()
 
@@ -70,7 +72,7 @@ async def show_what_next(call: types.CallbackQuery):
     # получение текущей даты и времени, а так же даты и времени окончания фестиваля
     # TODO: заменить tdate
     # tdate = datetime.now() + timedelta(hours=config.DELTA)
-    tdate = datetime(2021, 7, 18, 19, 29)
+    tdate = datetime(2021, 7, 18, 19, 29) + timedelta(hours=config.DELTA)
     dt_end = SQL.get_date_end()
     # проверка не закончился ли фестиваль
     if tdate >= dt_end:
@@ -114,8 +116,7 @@ async def show_results_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Вот результаты")
-    pass
+    await call.message.answer("Выбери интересующие тебя результаты", reply_markup=inkb_result_menu)
 
 
 @dp.callback_query_handler(text_contains="main:contests")

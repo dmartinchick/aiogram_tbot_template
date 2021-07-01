@@ -37,7 +37,7 @@ inkb_contests_menu=InlineKeyboardMarkup(
             InlineKeyboardButton(text="Бивуак", callback_data="contests:bivouac")
         ],
         [
-            InlineKeyboardButton(text="Драник-fest", callback_data="contests:dranik-fest")
+            InlineKeyboardButton(text="Драник-fest", callback_data="contests:dranik_fest")
         ],
         [
             InlineKeyboardButton(text="Творческий конкурс", callback_data="contests:creative_competition")

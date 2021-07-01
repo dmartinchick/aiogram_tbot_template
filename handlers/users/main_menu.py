@@ -140,7 +140,7 @@ async def show_contests_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Выбирите интересующие вас конкурсы", reply_markup=inkb_contests_menu)
+    await call.message.answer("Выбирите интересующий вас конкурс", reply_markup=inkb_contests_menu)
     pass
 
 

@@ -1,10 +1,9 @@
 from aiogram import types
-from aiogram.types.callback_query import CallbackQuery
-from aiogram.types.message import Message
-from aiogram.dispatcher.filters import Command
+#from aiogram.types.callback_query import CallbackQuery
+#from aiogram.types.message import Message
+#from aiogram.dispatcher.filters import Command
 
 from datetime import datetime, timedelta
-from keyboards.inline import result_menu
 
 from utils.db_api.sqlighter import SQL
 
@@ -19,6 +18,17 @@ from data import config
 @dp.message_handler(commands=['Меню', 'menu'], commands_prefix = ['⠀','/'])
 async def show_main_menu(message: types.Message):
     await message.answer(text="Главное меню", reply_markup=inkb_main_menu)
+
+
+@dp.callback_query_handler(text_contains='result:back')
+async def back_main_menu(call: types.CallbackQuery):
+    """Возвращает пользователя в главное меню
+    """
+    await call.answer(cache_time=360)
+    callback_data = call.data
+    logging.info(f"{callback_data=}")
+
+    await call.message.answer(text="Главное меню", reply_markup=inkb_main_menu)
 
 @dp.callback_query_handler(text_contains="main:what_now")
 async def show_what_now(call: types.CallbackQuery):

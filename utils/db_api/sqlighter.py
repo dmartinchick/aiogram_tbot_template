@@ -65,6 +65,17 @@ class SQLighter:
                         "LIMIT 2;"%(tdate))
         self.result = self.cur.fetchall()
         return self.result
+    
+
+    def contests_db(self, name_en):
+        self.myconn.close()
+        self.__init__()
+        self.cur.execute("SELECT `name`, `type`, `coefficient`, `rule`, `composition`, `time_start` " 
+                        "FROM `schedule` INNER JOIN `event` "
+                        "ON `schedule`.`event_name_id` = `event`.`id` "
+                        "WHERE `event`.`name_en` = '%s';"%(name_en))
+        self.result = self.cur.fetchone()
+        return self.result
 
 
 SQL = SQLighter()

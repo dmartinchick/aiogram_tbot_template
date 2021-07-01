@@ -81,6 +81,7 @@ VALUES
 (23,'Подведение итогов, закрытие туристического слета','Прочее',NULL,'Парковка Базы отдыха *Днепровские зори*',NULL,NULL),
 (24,'Отъезд','Прочее',NULL,NULL,NULL,NULL);
 
+
 UPDATE `event`
 SET `name`='Зарядка, подведение итогов первого дня'
 WHERE `id`=13;
@@ -139,3 +140,51 @@ ORDER BY `time_start`
 LIMIT 2;
 
 SELECT time_start FROM schedule ORDER BY time_start LIMIT 1;
+
+
+ALTER TABLE `event`
+ADD `name_en` VARCHAR(100) DEFAULT NULL ;
+
+UPDATE `event` 
+SET `name_en`="hiking_technique"
+WHERE `name`="Техника пешеходного туризма";
+UPDATE `event` 
+SET `name_en`="sleight_of_hand"
+WHERE `name`="Ловкость рук";
+UPDATE `event` 
+SET `name_en`="fight_for_the_man"
+WHERE `name`="Борьба за мужика";
+UPDATE `event` 
+SET `name_en`="body_art"
+WHERE `name`="Боди-арт";
+UPDATE `event` 
+SET `name_en`="night_orientation"
+WHERE `name`="Ночное ориентирование";
+UPDATE `event` 
+SET `name_en`="cycling_tourism"
+WHERE `name`="Велотуризм";
+UPDATE `event` 
+SET `name_en`="volleyball"
+WHERE `name`="Волейбол";
+UPDATE `event` 
+SET `name_en`="thors_hammer"
+WHERE `name`="Молот Тора";
+UPDATE `event` 
+SET `name_en`="knockers"
+WHERE `name`="Выбивалы";
+UPDATE `event` 
+SET `name_en`="bivouac"
+WHERE `name`="Бивуак";
+UPDATE `event` 
+SET `name_en`="dranik_fest"
+WHERE `name`="Драник-fest";
+UPDATE `event` 
+SET `name_en`="creative_competition"
+WHERE `name`="Творческий конкурс";
+UPDATE `event` 
+SET `name_en`="tourist_route"
+WHERE `name`="Туристический маршрут";
+UPDATE `event` 
+SET `name_en`="tug_of_war"
+WHERE `name`="Перетягивание каната";
+

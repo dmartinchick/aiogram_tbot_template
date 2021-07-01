@@ -1,4 +1,5 @@
 from aiogram import types
+from datetime import datetime
 
 from utils.db_api.sqlighter import SQL
 
@@ -14,7 +15,23 @@ async def show_hiking_technique_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о технике пешеходного туризма")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
 
 
 @dp.callback_query_handler(text_contains="contests:sleight_of_hand")
@@ -25,7 +42,24 @@ async def show_sleight_of_hand_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Ловкости рук")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:fight_for_the_man")
@@ -36,7 +70,24 @@ async def show_fight_for_the_man_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Борьбе за мужика")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:body_art")
@@ -47,7 +98,24 @@ async def show_body_art_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Боди-арте")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:night_orientation")
@@ -58,7 +126,24 @@ async def show_night_orientation_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Ночном ориентировании")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:cycling_tourism")
@@ -69,7 +154,24 @@ async def show_cycling_tourism_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Велотуризме")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:volleyball")
@@ -80,7 +182,24 @@ async def show_volleyball_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Волебойле")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:thors_hammer")
@@ -91,7 +210,24 @@ async def show_thors_hammer_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Молоте тора")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:knockers")
@@ -102,7 +238,24 @@ async def show_knockers_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Выбивалах")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:bivouac")
@@ -113,7 +266,24 @@ async def show_bivouac_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Бивуаке")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:dranik_fest")
@@ -124,7 +294,24 @@ async def show_dranik_fest_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Драник-фесте")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:creative_competition")
@@ -135,7 +322,24 @@ async def show_creative_competition_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Творческом конкурсе")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:tourist_route")
@@ -146,7 +350,24 @@ async def show_tourist_route_info(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Информация о Туристическом маршруте")
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
+
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+
 
 
 @dp.callback_query_handler(text_contains="contests:tug_of_war")
@@ -156,5 +377,22 @@ async def show_tug_of_war_info(call: types.CallbackQuery):
     await call.answer(cache_time=360)
     callback_data = call.data
     logging.info(f"{callback_data=}")
+    
+    # Обращение к БД
+    name_en = callback_data[9:]
+    rq = SQL.contests_db(name_en)
 
-    await call.message.answer(text="Информация о Перетягивании каната")
+    name = rq[0]
+    type = rq[1]
+    coefficient = rq[2]
+    rule = rq[3]
+    composition = rq[4]
+    time_start = rq[5].strftime('%d.%m %H:%M')
+
+    await call.message.answer(text=f"{name}\n"
+                            f"{type}\n\n"
+                            f"Коэффициент сложности:\n{coefficient}\n\n"
+                            f"Состав участников:\n{composition}\n\n"
+                            f"Дата и время начала:\n{time_start}\n\n"
+                            f"Правила:\n{rule}")
+

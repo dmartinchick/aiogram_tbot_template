@@ -121,7 +121,6 @@ async def show_full_schedule(call: types.CallbackQuery):
 async def show_results_menu(call: types.CallbackQuery):
     """Возвращает пользователю таблицы результатов
     """
-    #TODO: реализовать функцию show_results_menu
 
     await call.answer(cache_time=360)
     callback_data = call.data
@@ -134,7 +133,6 @@ async def show_results_menu(call: types.CallbackQuery):
 async def show_contests_menu(call: types.CallbackQuery):
     """Возвращает пользователю меню конкурсов
     """
-    #TODO: реализовать функцию show_contests_menu
 
     await call.answer(cache_time=360)
     callback_data = call.data

@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from aiogram import types
 #from aiogram.types.callback_query import CallbackQuery
 #from aiogram.types.message import Message
@@ -5,12 +6,15 @@ from aiogram import types
 
 from datetime import datetime, timedelta
 
+from aiogram.types.user import User
+
 from utils.db_api.sqlighter import SQL
 
 #Загрузка клавиатур
 from keyboards.inline.inline_main_menu import inkb_main_menu
 from keyboards.inline.result_menu import inkb_result_menu
 from keyboards.inline.contests_menu import inkb_contests_menu
+from keyboards.inline.subscriptions_menu import inkb_subscriptions_menu
 
 from loader import dp
 import logging
@@ -152,8 +156,18 @@ async def show_subscriptions_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Вот менеджер пописок")
-    pass
+
+    """message_user = User.get_current()['id']
+    if SQL.get_team_subs(message_user)[0] is None:
+        await call.message.answer("К сожелению у вас нет пописок на команды. Хотите добавить?")
+    else:
+        rq = SQL.get_team_subs(message_user)
+        await call.message.answer("Вы подписаны на: ")
+        for i in rq:
+            await call.message.answer(i)
+    """
+
+    await call.message.answer("Менеджер подписок",reply_markup=inkb_subscriptions_menu)
 
 
 @dp.callback_query_handler(text_contains="main:map")

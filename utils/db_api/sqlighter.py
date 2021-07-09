@@ -87,6 +87,22 @@ class SQLighter:
         self.result = self.cur.fetchall()
         return self.result
 
+    
+    def get_team_subs(self, user_id):
+        self.reconnect()
+
+        self.cur.execute("SELECT team_subs FROM users WHERE user_id = %s;"%user_id)
+        self.result = list(self.cur.fetchall())
+        return self.result
+
+
+    def get_event_subs(self, user_id):
+        self.reconnect()
+
+        self.cur.execute("SELECT event_subs FROM users WHERE user_id = %s;"%user_id)
+        self.result = list(self.cur.fetchone())[0]
+        return self.result
+
 
     # Методы добавления данных
     def set_user(self,user_id):

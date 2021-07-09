@@ -156,17 +156,6 @@ async def show_subscriptions_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-
-    """message_user = User.get_current()['id']
-    if SQL.get_team_subs(message_user)[0] is None:
-        await call.message.answer("К сожелению у вас нет пописок на команды. Хотите добавить?")
-    else:
-        rq = SQL.get_team_subs(message_user)
-        await call.message.answer("Вы подписаны на: ")
-        for i in rq:
-            await call.message.answer(i)
-    """
-
     await call.message.answer("Менеджер подписок",reply_markup=inkb_subscriptions_menu)
 
 

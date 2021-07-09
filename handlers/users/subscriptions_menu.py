@@ -1,4 +1,6 @@
 from aiogram import types
+from aiogram.types import message
+from aiogram.types.user import User
 
 from utils.db_api.sqlighter import SQL
 
@@ -13,7 +15,14 @@ async def show_team_subs(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Вы подписанны на следующие команды:")
+    message_user = User.get_current()['id']
+    rq = SQL.get_team_subs(message_user)
+    if rq is None:
+        await call.message.answer(text="К сожелению, у вас нет подписок на команды, хотите подписаться?")
+    else:
+        await call.message.answer(text="Вы подписанны на следующие команды:")
+        for team in rq:
+            await call.message.answer(text=team)
 
 
 @dp.callback_query_handler(text_contains='subscriptions:event_subs')
@@ -23,4 +32,12 @@ async def show_event_subs(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
 
-    await call.message.answer(text="Вы подписанны на следующие мероприятия:")
+    message_user = User.get_current()['id']
+    rq = SQL.get_event_subs(message_user)
+    if rq is None:
+        await call.message.answer(text="К сожелению, у вас нет подписок на конкурсы, хотите подписаться?")
+    else:
+        await call.message.answer(text="Вы подписанны на следующие мероприятия:")
+        for event in rq:
+            await call.message.answer(text=event)
+

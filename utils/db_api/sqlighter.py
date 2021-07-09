@@ -19,23 +19,25 @@ class SQLighter:
             print(e)
 
 
-    def get_date_start(self):
+    def reconnect(self):
         self.myconn.close()
         self.__init__()
+
+    # Методы извлечения данных
+    def get_date_start(self):
+        self.reconnect()
         self.cur.execute("SELECT MIN(time_start) FROM `schedule`;")
         self.result = self.cur.fetchone()
         return self.result[0]
 
     
     def get_date_end(self):
-        self.myconn.close()
-        self.__init__()
+        self.reconnect()
         self.cur.execute("SELECT MAX(time_end) FROM schedule;")
         self.result = self.cur.fetchone()
         return self.result[0]
 
 
-    # Методы извлечения данных
     def what_now_db(self, tdate):
         """Возвращает пользователю список кортежей с мероприятиями
 
@@ -45,8 +47,8 @@ class SQLighter:
         Returns:
             list: список кортежей с мероприятиями
         """
-        self.myconn.close()
-        self.__init__()
+        self.reconnect()
+
         self.cur.execute("SELECT name, time_start, time_end "
                         "FROM schedule INNER JOIN event ON schedule.event_name_id = event.id "
                         "WHERE time_start <= '%s' AND time_end >= '%s'" % (tdate, tdate))
@@ -55,8 +57,8 @@ class SQLighter:
 
 
     def what_next_db(self, tdate):
-        self.myconn.close()
-        self.__init__()
+        self.reconnect()
+
         self.cur.execute("SELECT `name`, `time_start` "
                         "FROM `schedule` INNER JOIN `event` " 
                         "ON `schedule`.`event_name_id` = `event`.`id` "
@@ -68,14 +70,31 @@ class SQLighter:
     
 
     def contests_db(self, name_en):
-        self.myconn.close()
-        self.__init__()
+        self.reconnect()
+
         self.cur.execute("SELECT `name`, `type`, `coefficient`, `rule`, `composition`, `time_start` " 
                         "FROM `schedule` INNER JOIN `event` "
                         "ON `schedule`.`event_name_id` = `event`.`id` "
                         "WHERE `event`.`name_en` = '%s';"%(name_en))
         self.result = self.cur.fetchone()
         return self.result
+
+
+    def get_users(self):
+        self.reconnect()
+
+        self.cur.execute("SELECT user_id FROM users;")
+        self.result = self.cur.fetchall()
+        return self.result
+
+
+    # Методы добавления данных
+    def set_user(self,user_id):
+        self.reconnect()
+
+        self.cur.execute("INSERT INTO users (user_id, team_subs, event_subs) "
+                        "VALUES (%s,NULL, NULL);"%(user_id))
+        self.myconn.commit()
 
 
 SQL = SQLighter()

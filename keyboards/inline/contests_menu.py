@@ -1,6 +1,13 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.inline.callback_datas import contests_menu_choice
 
+from utils.db_api.sqlighter import SQL
+
+# Обращенеи к БД, и получение списка конкурсов
+rq = SQL.contests_db_list()
+for row in rq:
+    print(row)
+
 
 inkb_contests_menu=InlineKeyboardMarkup(
     inline_keyboard=[

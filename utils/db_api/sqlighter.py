@@ -65,9 +65,19 @@ class SQLighter:
                         "WHERE `time_start` > '%s' " 
                         "ORDER BY `time_start` "
                         "LIMIT 2;"%(tdate))
-        self.result = self.cur.fetchall()
+        self.result = self.cur.fetchone()
         return self.result
     
+
+    def contests_db_list(self):
+        self.reconnect()
+
+        self.cur.execute("SELECT `name`, `name_en` "
+                        "FROM `event` "
+                        "WHERE `name_en` IS NOT NULL;")
+        self.result = self.cur.fetchall()
+        return self.result
+
 
     def contests_db(self, name_en):
         self.reconnect()
@@ -88,20 +98,34 @@ class SQLighter:
         return self.result
 
     
+    def get_users_subs(self, user_id):
+        self.reconnect()
+
+        self.cur.execute("SELECT `team`.`name`, `event`.`name` FROM `subscriptions` "
+                        "JOIN `team` ON `subscriptions`.`team_id` = `team`.`id` "
+                        "JOIN `event` ON `subscriptions`.`event_id` = `event`.`id` "
+                        "WHERE `subscriptions`.`user_id` = %s"%user_id)
+        self.result = self.cur.fetchall()
+        return self.result
+
     def get_team_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT team_subs FROM users WHERE user_id = %s;"%user_id)
-        self.result = self.cur.fetchone()
-        return str(self.result[0]).split(',')
+        self.cur.execute("SELECT `team`.`name` FROM `subscriptions` "
+                        "JOIN `team` ON `subscriptions`.`team_id` = `team`.`id` "
+                        "WHERE `subscriptions`.`user_id` = %s"%user_id)
+        self.result = self.cur.fetchall()
+        return self.result
 
 
     def get_event_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT event_subs FROM users WHERE user_id = %s;"%user_id)
-        self.result = list(self.cur.fetchone())[0]
-        return str(self.result[0]).split(',')
+        self.cur.execute("SELECT `event`.`name` FROM `subscriptions` "
+                        "JOIN `event` ON `subscriptions`.`event_id` = `event`.`id` "
+                        "WHERE `subscriptions`.`user_id` = %s"%user_id)
+        self.result = self.cur.fetchall()
+        return self.result
 
 
     # Методы добавления данных
@@ -117,9 +141,8 @@ class SQLighter:
     def set_team_subs(self,user_id, team):
         self.reconnect()
 
-        rq = self.get_team_subs(user_id)
-        rq.append(team)
-        self.cur.execute("UPDATE users SET team_subs='%s' WHERE user_id=%s;"%(rq,user_id))
+        self.cur.execute("INSERT INTO `subscriptions` (user_id, team_id) VALUES "
+                        "(%s,(SELECT id FROM team WHERE name=%s));"%(user_id, team))
         self.myconn.commit()
 
 SQL = SQLighter()

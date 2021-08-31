@@ -190,3 +190,49 @@ WHERE `name`="Перетягивание каната";
 
 
 SELECT user_id,team_subs, event_subs FROM users;
+
+INSERT INTO `team` (`name`, holding)
+VALUES
+('Прокат',1),
+('ГКС+Меттранс',1),
+('Сталь',1),
+('РАЗАМ',1),
+('Белвторчермет',1),
+('МПЗ',1),
+('ЗУбры',1),
+('РМЗ',1),
+('ByCord',1),
+('Интеграл',0),
+('МЗКТ',0),
+('МАЗ',0),
+('Могилевлифтмаш',0),
+('ММЗ',1);
+
+SELECT * FROM team;
+
+
+CREATE TABLE IF NOT EXISTS `subscriptions` (
+    `id` INT AUTO_INCREMENT,
+    `user_id` INT,
+    `team_id` INT DEFAULT NULL,
+    `event_id` INT DEFAULT NULL,
+
+    PRIMARY KEY (`id`),
+    
+    CONSTRAINT `FK_subscriptions_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users`(`user_id`),
+
+    CONSTRAINT `FK_subscriptions_team`
+    FOREIGN KEY (`team_id`)
+    REFERENCES `team`(`id`),
+
+    CONSTRAINT `FK_subscriptions_event`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `event`(`id`)
+);
+
+SELECT `team`.`name` FROM `subscriptions`
+JOIN `team` ON `subscriptions`.`team_id` = `team`.`id`
+JOIN `event` ON `subscriptions`.`event_id` = `event`.`id`
+WHERE user_id = 466138751;

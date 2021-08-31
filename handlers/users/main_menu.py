@@ -141,6 +141,7 @@ async def show_contests_menu(call: types.CallbackQuery):
     await call.answer(cache_time=360)
     callback_data = call.data
     logging.info(f"{callback_data=}")
+
     
     await call.message.answer("Выбирите интересующий вас конкурс", reply_markup=inkb_contests_menu)
     pass
@@ -156,7 +157,14 @@ async def show_subscriptions_menu(call: types.CallbackQuery):
     callback_data = call.data
     logging.info(f"{callback_data=}")
     
-    await call.message.answer("Менеджер подписок",reply_markup=inkb_subscriptions_menu)
+    message_user = User.get_current()['id']
+    rq = SQL.get_users_subs(message_user)
+    if rq == []:
+        await call.message.answer(text="К сожелению, у вас нет подписок, хотите подписаться?",reply_markup=inkb_subscriptions_menu)
+    else:
+        await call.message.answer(text="Вы подписанны на:")
+        await call.message.answer(rq)
+        await call.message.answer(text="Менеджер подписок",reply_markup=inkb_subscriptions_menu)
 
 
 @dp.callback_query_handler(text_contains="main:map")

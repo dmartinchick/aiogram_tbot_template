@@ -92,8 +92,8 @@ class SQLighter:
         self.reconnect()
 
         self.cur.execute("SELECT team_subs FROM users WHERE user_id = %s;"%user_id)
-        self.result = self.cur.fetchone()
-        return str(self.result[0]).split(',')
+        self.result = list(self.cur.fetchall())
+        return self.result
 
 
     def get_event_subs(self, user_id):
@@ -101,7 +101,7 @@ class SQLighter:
 
         self.cur.execute("SELECT event_subs FROM users WHERE user_id = %s;"%user_id)
         self.result = list(self.cur.fetchone())[0]
-        return str(self.result[0]).split(',')
+        return self.result
 
 
     # Методы добавления данных
@@ -113,19 +113,4 @@ class SQLighter:
         self.myconn.commit()
 
 
-    # TODO: Проверить реализацию функции добавления подписки на команду
-    def set_team_subs(self,user_id, team):
-        self.reconnect()
-
-        rq = self.get_team_subs(user_id)
-        rq.append(team)
-        self.cur.execute("UPDATE users SET team_subs='%s' WHERE user_id=%s;"%(rq,user_id))
-        self.myconn.commit()
-
 SQL = SQLighter()
-"""
-rq_li = ['by.Cord','Прокат']
-SQL.set_team_subs(466138751,rq_li)
-#SQL.set_team_subs(466138751,'Прокат')
-rq = SQL.get_team_subs(466138751)
-print(list(rq))"""

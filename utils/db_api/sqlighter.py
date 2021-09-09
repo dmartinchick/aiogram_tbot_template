@@ -66,6 +66,9 @@ class SQLighter:
                         "ORDER BY `time_start` "
                         "LIMIT 2;"%(tdate))
         self.result = self.cur.fetchall()
+        for row in self.result:
+            for point in row:
+                print(point)
         return self.result
     
 
@@ -91,16 +94,21 @@ class SQLighter:
     def get_team_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT team_subs FROM users WHERE user_id = %s;"%user_id)
-        self.result = list(self.cur.fetchall())
+        self.cur.execute("SELECT team.name FROM subscriptions "
+                        "JOIN team "
+                        "ON team.id=subscriptions.team_id "
+                        "WHERE subscriptions.user_id=%s;"%user_id)
+        self.result = self.cur.fetchall()
         return self.result
-
 
     def get_event_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT event_subs FROM users WHERE user_id = %s;"%user_id)
-        self.result = list(self.cur.fetchone())[0]
+        self.cur.execute("SELECT event.name FROM subscriptions "
+                        "JOIN event "
+                        "ON event.id=subscriptions.event_id "
+                        "WHERE subscriptions.user_id=%s;"%user_id)
+        self.result = self.cur.fetchall()
         return self.result
 
 

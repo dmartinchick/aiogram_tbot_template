@@ -90,7 +90,14 @@ class SQLighter:
         self.result = self.cur.fetchall()
         return self.result
 
-    
+    def get_teams_all(self):
+        self.reconnect()
+
+        self.cur.execute("SELECT name FROM team;")
+        self.result = self.cur.fetchall()
+        return self.result
+
+
     def get_team_subs(self, user_id):
         self.reconnect()
 

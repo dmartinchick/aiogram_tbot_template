@@ -2,6 +2,8 @@ from aiogram import types
 from aiogram.types.user import User
 from utils.db_api.sqlighter import SQL
 
+from keyboards.inline.subs_team import get_teams_list
+
 from loader import dp
 import logging
 from data import config
@@ -22,6 +24,10 @@ async def show_team_subs(call: types.CallbackQuery):
         await call.message.answer(text="Вы подписанны на следующие команды:")
         for row in rq:
             await call.message.answer(text="👉 " + row[0])
+        
+        markup = await get_teams_list(message_user)
+        await call.message.answer(text="Можите так же подписаться на:",reply_markup = markup)
+
     #TODO: добавить инлайн кнопку "Добавить подписку" которая будет вести на полный списко команд.
     #TODO: добавить инлайн кнопку "Отменить подписку" которая будет вести на полный списко команд.
 
@@ -34,7 +40,7 @@ async def show_event_subs(call: types.CallbackQuery):
 
     message_user = User.get_current()['id']
     rq = SQL.get_event_subs(message_user)
-    print(len(rq))
+    
     if len(rq) == 0:
         await call.message.answer(text="Вы не подписанны ни на один конкурс.")
     else:

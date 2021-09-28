@@ -1,34 +1,30 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils import callback_data
-from utils.db_api.sqlighter import SQL
+# TODO: Переименовать файл. он должен формировать не только клавиатуру для team
 
-from keyboards.inline.callback_datas import subscriptions_team_choice
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+
+from keyboards.inline.callback_datas import subscriptions_manager_choice
+
+def make_callback_data(type_subs, item_name):
+    return subscriptions_manager_choice.new(type_subs=type_subs, item_name=item_name)
 
 #TODO: реализовать многоуровневость
-async def get_teams_list(message_user):
+async def get_items_kb(items_list, subscribe):
 
+    print("enter in get_items_kb")
     #Создаем клавиатуру
-    inkb_subs_teams = InlineKeyboardMarkup(row_width=2)
+    inkb_subs = InlineKeyboardMarkup(row_width=2)
+    print("create_inkb_subs")
+    # Проходимся по каждому элементу списка и создаем кнопки
+    for item in items_list:
 
-    #TODO: Вынести в отдельную функцию. Возможно в отдельный файл вынести
-    all_teams = SQL.get_teams_all()
-    user_teams_subs = SQL.get_team_subs(message_user)
-    user_teams_unsubs = []
-    for team in all_teams:
-        if team not in user_teams_subs:
-            user_teams_unsubs.append(str(team[0]))
-
-    for team in user_teams_unsubs:
-
-        button_text = team
+        button_text = item['name']
 
         # TODO: облогородить калбэки. 
-        callback_data = "make_callback_data"
+        callback_data = make_callback_data(subscribe, item['id'])
 
-        inkb_subs_teams.insert(
+        inkb_subs.insert(
             InlineKeyboardButton(text=button_text, callback_data=callback_data)
         )
 
-    return inkb_subs_teams
-
-
+    return inkb_subs

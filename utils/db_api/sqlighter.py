@@ -1,6 +1,7 @@
 from datetime import datetime
 from data import config
 from mysql.connector import connect, Error
+from utils.misc.other import convert_to_list
 
 
 class SQLighter:
@@ -66,9 +67,6 @@ class SQLighter:
                         "ORDER BY `time_start` "
                         "LIMIT 2;"%(tdate))
         self.result = self.cur.fetchall()
-        for row in self.result:
-            for point in row:
-                print(point)
         return self.result
     
 
@@ -101,12 +99,12 @@ class SQLighter:
     def get_team_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT team.name FROM subscriptions "
+        self.cur.execute("SELECT team.name, team.id FROM subscriptions "
                         "JOIN team "
                         "ON team.id=subscriptions.team_id "
                         "WHERE subscriptions.user_id=%s;"%user_id)
         self.result = self.cur.fetchall()
-        return self.result
+        return convert_to_list(self.result)
 
     def get_event_subs(self, user_id):
         self.reconnect()

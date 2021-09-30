@@ -1,10 +1,10 @@
 def get_unsubs_list(list_all, list_subs):
-    user_teams_unsubs = []
-    for team in list_all:
-        if team not in list_subs:
-            user_teams_unsubs.append(str(team[0]))
+    user_unsubs = []
+    for item in list_all:
+        if item not in list_subs:
+            user_unsubs.append(item)
 
-    return user_teams_unsubs
+    return user_unsubs
 
 
 def convert_to_list(tuple):

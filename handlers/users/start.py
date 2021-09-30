@@ -9,7 +9,6 @@ from utils.db_api.sqlighter import SQL
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
 
-    # TODO: Реализвать проверку есть ли пользователь в БД
     message_user = User.get_current()['id']
     rq = SQL.get_users()
     users_li = []

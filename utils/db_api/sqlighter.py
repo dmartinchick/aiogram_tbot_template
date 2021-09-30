@@ -91,10 +91,16 @@ class SQLighter:
     def get_teams_all(self):
         self.reconnect()
 
-        self.cur.execute("SELECT name FROM team;")
+        self.cur.execute("SELECT name, id FROM team;")
         self.result = self.cur.fetchall()
-        return self.result
+        return convert_to_list(self.result)
 
+    def get_events_all(self):
+        self.reconnect()
+
+        self.cur.execute("SELECT name, id FROM event;")
+        self.result = self.cur.fetchall()
+        return convert_to_list(self.result)
 
     def get_team_subs(self, user_id):
         self.reconnect()
@@ -109,12 +115,12 @@ class SQLighter:
     def get_event_subs(self, user_id):
         self.reconnect()
 
-        self.cur.execute("SELECT event.name FROM subscriptions "
+        self.cur.execute("SELECT event.name, event.id FROM subscriptions "
                         "JOIN event "
                         "ON event.id=subscriptions.event_id "
                         "WHERE subscriptions.user_id=%s;"%user_id)
         self.result = self.cur.fetchall()
-        return self.result
+        return convert_to_list(self.result)
 
 
     # Методы добавления данных

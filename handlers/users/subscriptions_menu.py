@@ -1,72 +1,65 @@
 from aiogram import types
+from aiogram.dispatcher.filters import Command
+from aiogram.types import CallbackQuery
+from aiogram.types import user
 from aiogram.types.user import User
 from utils.db_api.sqlighter import SQL
 
 from loader import dp
-import logging
-from data import config
 from utils.misc.other import get_unsubs_list
 
-from keyboards.inline.subs_team import get_items_kb
+from keyboards.inline.subscriptions_menu import categories_keyboard, subscriptions_keyboard, unsubscriptions_keyboard
+from keyboards.inline.callback_datas import menu_cd
+
+async def subscriptions_categories(call:CallbackQuery, **kwargs):
+    """Формирует и возвращает пользователю клавиатуру категорий
+    """
+    user_id = call.from_user.id       
+    # Формируем клавиатуру
+    markup = await categories_keyboard(user_id)
+    await call.message.answer(text="Менеджер подписок.\nВыберите интересующую вас категорию.",
+                            reply_markup=markup)
 
 
-
-@dp.callback_query_handler(text_contains='subscriptions:team_subs')
-async def show_team_subs(call: types.CallbackQuery):
-
-    await call.answer(cache_time=360)
-    callback_data = call.data
-    logging.info(f"{callback_data=}")
-
-    # Получение Id пользователя
-    message_user = User.get_current()['id']
+async def subscriptions_items(call:CallbackQuery, user_id, category, **kwargs):
+    """Формируем и возвращаем пользователю клавиатуру с подписками на команды
+    """
     
-    # получаем полный список команд
-    teams_list = SQL.get_teams_all()
-    # получаем список команд на которые подписан пользователь
-    teams_subs_user = SQL.get_team_subs(message_user)
-    # создаем список команд на которые может подписаться пользователь
-    teams_unsubs_user = get_unsubs_list(teams_list, teams_subs_user)
+    sing_markup = await subscriptions_keyboard(category, user_id)
+    unsing_markup = await unsubscriptions_keyboard(category, user_id)
+
+    await call.message.answer(text="Вы подписаны на следующие команды. \nЧто бы отписаться нажмите на команду", 
+                                reply_markup=sing_markup)
+    await call.message.answer(text="Вы не подписаны на следующие команды. \nЧто бы подписаться нажмите на команду",
+                                reply_markup=unsing_markup)
 
 
-    # Проверяем есть ли пользователя подписки
-    if len(teams_subs_user) == 0:
-        teams_subs_markup = get_items_kb(teams_unsubs_user, True) 
-        await call.message.answer(text="Вы не подписаны ни на одну команду."
-                                        "Вы можете подписаться на новости команды "
-                                        "просто нажав на кнопку с её названием",
-                                        reply_markup = teams_subs_markup)
-    elif len(teams_unsubs_user) == 0:
-        teams_unsubs_markup = get_items_kb(teams_list, False)
-        await call.message.answer(text="Вы подписаны на все команды."
-                                        "Вы можете отписаться от неинтересующей вас команды "
-                                        "просто нажав на кнопку с её названием",
-                                        reply_markup=teams_unsubs_markup)
-    else:
-        teams_subs_markup = get_items_kb(teams_unsubs_user, True)
-        teams_unsubs_markup =get_items_kb(teams_list, False)
-        await call.message.answer(text="Выподписаны на:", reply_markup=teams_unsubs_markup)
-        await call.message.answer(text="Вы не подписаны на:", reply_markup=teams_unsubs_markup)
+@dp.callback_query_handler(menu_cd.filter())
+async def navigate(call: CallbackQuery, callback_data: dict):
+    # Получаем текущий уровень меню, который запросил пользователь
+    current_level = callback_data.get("level")
 
+    # Получаем id пользователя
+    user_id = callback_data.get("user_id")
 
-    #TODO: добавить инлайн кнопку "Добавить подписку" которая будет вести на полный списко команд.
-    #TODO: добавить инлайн кнопку "Отменить подписку" которая будет вести на полный списко команд.
+    # Получаем категорию, которую выбрал пользователь (Передается всегда)
+    category = callback_data.get("category")
 
-@dp.callback_query_handler(text_contains='subscriptions:event_subs')
-async def show_event_subs(call: types.CallbackQuery):
+    # Получаем айди товара, который выбрал пользователь (Передается НЕ ВСЕГДА - может быть 0)
+    item_id = int(callback_data.get("item_id"))
 
-    await call.answer(cache_time=360)
-    callback_data = call.data
-    logging.info(f"{callback_data=}")
+    # Прописываем "уровни" в которых будут отправляться новые кнопки пользователю
+    levels = {
+        "0": subscriptions_categories,  # Отдаем категории
+        "1": subscriptions_items  # Отдаем список команд/событий 
+    }
 
-    message_user = User.get_current()['id']
-    rq = SQL.get_event_subs(message_user)
-    
-    if len(rq) == 0:
-        await call.message.answer(text="Вы не подписанны ни на один конкурс.")
-    else:
-        await call.message.answer(text="Вы подписанны на следующие конкурсы:")
-        for row in rq:
-            await call.message.answer(text="👉 " + row[0])
-    #TODO: добавить инлайн кнопку "Добавить подписку" которая будет вести на полный списко конкурсов.
-    #TODO: добавить инлайн кнопку "Отменить подписку" которая будет вести на полный списко конкурсов.
+    # Забираем нужную функцию для выбранного уровня
+    current_level_function = levels[current_level]
+
+    await current_level_function(
+        call,
+        user_id = user_id,
+        category=category,
+        item_id=item_id
+    )

@@ -51,7 +51,7 @@ class SQLighter:
         self.reconnect()
 
         self.cur.execute("SELECT name, time_start, time_end "
-                        "FROM schedule INNER JOIN event ON schedule.event_name_id = event.id "
+                        "FROM schedule INNER JOIN event ON schedule.event_id = event.id "
                         "WHERE time_start <= '%s' AND time_end >= '%s'" % (tdate, tdate))
         self.result = self.cur.fetchall()
         return self.result
@@ -62,7 +62,7 @@ class SQLighter:
 
         self.cur.execute("SELECT `name`, `time_start` "
                         "FROM `schedule` INNER JOIN `event` " 
-                        "ON `schedule`.`event_name_id` = `event`.`id` "
+                        "ON `schedule`.`event_id` = `event`.`id` "
                         "WHERE `time_start` > '%s' " 
                         "ORDER BY `time_start` "
                         "LIMIT 2;"%(tdate))
@@ -75,7 +75,7 @@ class SQLighter:
 
         self.cur.execute("SELECT `name`, `type`, `coefficient`, `rule`, `composition`, `time_start` " 
                         "FROM `schedule` INNER JOIN `event` "
-                        "ON `schedule`.`event_name_id` = `event`.`id` "
+                        "ON `schedule`.`event_id` = `event`.`id` "
                         "WHERE `event`.`name_en` = '%s';"%(name_en))
         self.result = self.cur.fetchone()
         return self.result

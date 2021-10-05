@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from aiogram.types.user import User
 
 from utils.db_api.sqlighter import SQL
+from utils.db_api.db_comands import get_date_start, get_date_end, get_full_shedule, get_users_list, get_what_next, get_what_now
 
 from handlers.users.subscriptions_menu import subscriptions_categories
 
@@ -24,7 +25,7 @@ from data import config
 @dp.message_handler(commands=['Меню', 'menu'], commands_prefix = ['⠀','/'])
 async def show_main_menu(message: types.Message):
     await message.answer(text="Главное меню", reply_markup=inkb_main_menu)
-
+    
 
 @dp.callback_query_handler(text_contains='back')
 async def back_main_menu(call: types.CallbackQuery):
@@ -48,8 +49,8 @@ async def show_what_now(call: types.CallbackQuery):
     # TODO: заменить tdate
     # tdate = datetime.now() + timedelta(hours=config.DELTA)
     tdate = datetime(2021, 7, 18, 19, 29) + timedelta(hours=config.DELTA)
-    dt_start = SQL.get_date_start()
-    dt_end = SQL.get_date_end()
+    dt_start = get_date_start()
+    dt_end = get_date_end()
 
     # Проверка начался ли фестиваль
     if tdate < dt_start:
@@ -60,7 +61,7 @@ async def show_what_now(call: types.CallbackQuery):
         await call.message.answer(text='🤓 Сейча проходит 🤓')
         
         # обращение к базе данных и получение данных
-        rq = SQL.what_now_db(tdate)
+        rq = get_what_now(tdate)
        
         # запуск цикла обработки текущих событий
         for event in rq:
@@ -89,23 +90,18 @@ async def show_what_next(call: types.CallbackQuery):
     # TODO: заменить tdate
     # tdate = datetime.now() + timedelta(hours=config.DELTA)
     tdate = datetime(2021, 7, 18, 19, 29) + timedelta(hours=config.DELTA)
-    dt_end = SQL.get_date_end()
+    dt_end = get_date_end()
     # проверка не закончился ли фестиваль
     if tdate >= dt_end:
         await call.message.answer("☹ К сожелению, фестиваль уже прошел.\nУвидимся в следующем году! 😁")
     else:
         # обращение к БД и получение ближайших мероприятий
-        rq = SQL.what_next_db(tdate)
+        rq = get_what_next(tdate)
 
         # запуск цикла обработки текущих событий
         for event in rq:
-            # парсинг данных
-            event_name = event[0]
-            time_start = event[1].strftime('%d.%m %H:%M')
-            # time_end = event[2].strftime('%d.%m %H:%M')
-            # address = event[3]
-            # contains = event[4]
-            await call.message.answer(f"{event_name}\nНачало: {time_start}")
+            await call.message.answer(f"{event['name']}\n"
+                                    f"Дата и время начала: {event['time_start'].strftime('%d.%m %H:%M')}")
 
 
 @dp.callback_query_handler(text_contains="main:full_schedule")
@@ -117,9 +113,12 @@ async def show_full_schedule(call: types.CallbackQuery):
     await call.answer(cache_time=360)
     callback_data = call.data
     logging.info(f"{callback_data=}")
-    
+    rq = get_full_shedule()
     await call.message.answer("Вот полное расписание")
-    pass
+    for item in rq:
+        await call.message.answer(f"{item['name']}"
+                                f"\nНачало:{item['time_start'].strftime('%d.%m %H:%M')}"
+                                f"\nКонец:{item['time_end'].strftime('%d.%m %H:%M')}\n\n")
 
 
 @dp.callback_query_handler(text_contains="main:results")

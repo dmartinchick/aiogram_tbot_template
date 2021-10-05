@@ -33,6 +33,7 @@ async def subscriptions_items(call:CallbackQuery, user_id, category, **kwargs):
     await call.message.answer(text="Вы не подписаны на следующие команды. \nЧто бы подписаться нажмите на команду",
                                 reply_markup=unsing_markup)
 
+#TODO: реализовать handler для добавления/удаления подписок пользователя
 
 @dp.callback_query_handler(menu_cd.filter())
 async def navigate(call: CallbackQuery, callback_data: dict):

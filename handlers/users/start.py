@@ -3,21 +3,21 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from aiogram.types.user import User
 from keyboards.default.start_menu import start_menu_btn
 from loader import dp
-from utils.db_api.sqlighter import SQL
+from utils.db_api.db_comands import get_users_list, set_user
 
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
 
-    message_user = User.get_current()['id']
-    rq = SQL.get_users()
-    users_li = []
-    for i in rq:
-        users_li.append(i[0])
-    if message_user in users_li:
-        pass
-    else:
-        SQL.set_user(message_user)
+    # Проверяем есть ли пользователь в БД. Если нет, то добавляем его в БД
+
+    # Получаем id пользователя в Телеграмме
+    message_user = message.from_user.id
+    # Получаем список пользователей из БД
+    users = get_users_list()
+    if message_user not in users:
+        set_user(message_user)
+        
 
 
     await message.answer(f"Привет ✋, {message.from_user.full_name}!\n\n"

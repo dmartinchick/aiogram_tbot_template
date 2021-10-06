@@ -19,10 +19,7 @@ rq = s.query(Schedule.time_start).order_by(Schedule.time_start).first()
 print(rq)
 """
 tdate = datetime(2021, 7, 18, 11, 00)
-rq_list = []
-for item in s.query(Event.name).filter(and_(Schedule.event_id == Event.id, Schedule.time_start > tdate)).limit(2):
-    rq_list.append(item[0])
-#print(rq_list)
+
 
 # методы извлечения данных
 
@@ -65,15 +62,16 @@ def get_full_shedule():
     return event_list
 
 
-def get_contests_info(name_en):
-    pass
-
+def get_event_info(event_id):
+    rq = s.qery(Event.name, Event.type, Event.coefficient, Event.rule, Event.composition, Schedule.time_start).filtre(and_(Schedule.event_id == Event.id, Event.id ==event_id)).one()
+    event_info = {'name':rq[0], 'type':rq[1], 'coefficient':rq[2], 'rule':rq[3], 'composition':rq[4], 'time_start':rq[5]}
+    return event_info
 
 def get_users_list():
     users_list = []
     for user in s.query(User.user_id).all():
         users_list.append(user[0])
-    print(users_list)
+    
     return users_list
 
 

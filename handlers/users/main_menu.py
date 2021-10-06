@@ -143,7 +143,7 @@ async def show_contests_menu(call: types.CallbackQuery):
     logging.info(f"{callback_data=}")
     
     await call.message.answer("Выбирите интересующий вас конкурс", reply_markup=inkb_contests_menu)
-    pass
+
 
 @dp.callback_query_handler(text_contains="main:subscriptions")
 async def show_subscriptions_menu(call: types.CallbackQuery):
